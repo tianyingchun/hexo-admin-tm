@@ -1,4 +1,3 @@
-
 import { Component } from 'react';
 
 export class Post extends Component<any, any> {

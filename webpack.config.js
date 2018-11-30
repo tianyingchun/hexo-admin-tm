@@ -3,12 +3,15 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const settings = {
-  distPath: path.join(__dirname, "dist"),
+  distPath: path.join(__dirname, "www"),
   srcPath: path.join(__dirname, "src"),
-  wwwPath: path.join(__dirname, "www")
+  templatePath: path.join(__dirname, "templates"),
 };
+
 const babelLoaderOpts = {
   cacheDirectory: true,
   babelrc: false,
@@ -31,12 +34,6 @@ const babelLoaderOpts = {
     'react-hot-loader/babel',
   ],
 }
-function cwdPathExtend(subpath) {
-  return path.join(process.cwd(), subpath);
-}
-function wwwPathExtend(subpath) {
-  return path.join(settings.wwwPath, subpath)
-}
 
 module.exports = (env, options) => {
   process.env.NODE_ENV = options.mode;
@@ -50,16 +47,16 @@ module.exports = (env, options) => {
     output: {
       publicPath: '',
       filename: `[name]/bundle.js`,
-      path: cwdPathExtend('dist'),
+      path: settings.distPath,
     },
     entry: {
-      [`www`]: ["@babel/polyfill", "./src/index.tsx"],
+      [`admin`]: ["@babel/polyfill", "./src/index.tsx"],
     },
     devServer: {
       hot: true,
-      contentBase: path.join(__dirname, 'www'),
+      contentBase: settings.templatePath,
       compress: true,
-      port: 9000,
+      port: 20000,
       // proxy: {
       //   '/api': 'http://127.0.0.1:50545'
       // }
@@ -69,7 +66,7 @@ module.exports = (env, options) => {
         {
           test: /\.less$/,
           use: [
-            "style-loader",
+            isDevMode ? "style-loader" : { loader: MiniCssExtractPlugin.loader, options: { publicPath: '../' } },
             { loader: "css-loader", options: { sourceMap: isDevMode } },
             { loader: "postcss-loader", options: { plugins: [require("autoprefixer")()], sourceMap: isDevMode } },
             { loader: "less-loader", options: { sourceMap: isDevMode } }
@@ -95,12 +92,21 @@ module.exports = (env, options) => {
       new webpack.ProvidePlugin({
         "React": "react",
       }),
+      new MiniCssExtractPlugin({
+        filename: `[name]/bundle.css`
+      }),
+      new CopyWebpackPlugin([
+        { from: 'templates/vendor', to: `${settings.distPath}/vendor/`, toType: 'dir' },
+        { from: 'templates/login', to: `${settings.distPath}/login/`, toType: 'dir' },
+        { from: 'templates/css', to: `${settings.distPath}/css/`, toType: 'dir' },
+        { from: 'templates/logo.png', to: `${settings.distPath}/logo.png`, toType: 'file' },
+      ]),
       new ForkTsCheckerWebpackPlugin(),
       new CleanWebpackPlugin([settings.distPath], {
         verbose: true
       }),
       new HtmlWebpackPlugin({
-        template: wwwPathExtend("index.html")
+        template: path.join(settings.templatePath, 'index.html')
       }),
     ]
   };

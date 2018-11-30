@@ -1,12 +1,9 @@
 import { Route, Switch } from 'react-router-dom';
-import { Post } from './Post';
-import { Posts } from './Posts';
-import { Page } from './Page';
-import { Pages } from './Pages';
-import { About } from './About';
-import { Deploy } from './Deploy';
-import { Settings } from './Settings';
-import { AuthSetup } from './AuthSetup';
+import { Post, Posts } from './post';
+import { Page, Pages } from './page';
+import { About } from './about';
+import { Deploy } from './deploy';
+import { Settings, AuthSetup } from './setting';
 
 export default () => {
   return (

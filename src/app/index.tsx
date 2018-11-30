@@ -1,3 +1,4 @@
+import './index.less';
 import { hot } from 'react-hot-loader';
 import { HashRouter } from 'react-router-dom';
 import { Component } from 'react';
