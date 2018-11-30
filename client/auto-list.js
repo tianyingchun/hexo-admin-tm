@@ -1,27 +1,26 @@
 
-var React = require('react/addons')
-var cx = React.addons.classSet
-
-var AutoList = React.createClass({
-  getInitialState: function () {
-    return {
+var React = require('react')
+var cx = require('classnames');
+class AutoList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state ={
       selected: null,
       text: ''
     }
-  },
-
-  componentDidUpdate: function (prevProps, prevState) {
+  }
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.selected === null &&
-        this.state.selected !== null) {
+      this.state.selected !== null) {
       setTimeout(() => this.refs.input.getDOMNode().focus(), 100)
     }
-  },
+  }
 
-  _onChange: function (e) {
-    this.setState({text: e.target.value})
-  },
+  _onChange(e) {
+    this.setState({ text: e.target.value })
+  }
 
-  _onEdit: function (i, e) {
+  _onEdit(i, e) {
     if (e.button !== 0) return
     e.preventDefault()
     e.stopPropagation()
@@ -29,9 +28,9 @@ var AutoList = React.createClass({
       selected: i,
       text: this.props.values[i] || ''
     })
-  },
+  }
 
-  _onBlur: function () {
+  _onBlur() {
     var values = this.props.values.slice()
     if (this.props.values.indexOf(this.state.text) === -1) {
       if (this.state.selected >= values.length) {
@@ -47,27 +46,27 @@ var AutoList = React.createClass({
       text: ''
     });
     this.props.onChange(values)
-  },
+  }
 
-  _onRemove: function (i) {
+  _onRemove(i) {
     var values = this.props.values.slice()
     if (i >= values.length) return
     values.splice(i, 1)
     if (this.state.selected !== null &&
-        i < this.state.selected) {
-      this.setState({selected: i-1})
+      i < this.state.selected) {
+      this.setState({ selected: i - 1 })
     }
     this.props.onChange(values)
-  },
+  }
 
-  _onKeyDown: function (e) {
+  _onKeyDown(e) {
     if (e.key === 'Enter') {
       if (!this.state.text) return
       this.addAfter()
     }
-  },
+  }
 
-  addAfter: function () {
+  addAfter() {
     if (this.props.values.indexOf(this.state.text) !== -1) {
       return
     }
@@ -87,9 +86,9 @@ var AutoList = React.createClass({
       selected: this.state.selected + 1,
       text: ''
     })
-  },
+  }
 
-  render: function () {
+  render() {
     var values = this.props.values.concat(['Add new'])
     return <div className="autolist">
       {values.map((item, i) =>
@@ -101,22 +100,22 @@ var AutoList = React.createClass({
               value={this.state.text}
               onBlur={this._onBlur}
               onChange={this._onChange}
-              onKeyDown={this._onKeyDown}/> :
+              onKeyDown={this._onKeyDown} /> :
             <div className={cx({
-                    "autolist_show": true,
-                    "autolist_show--new": i === values.length - 1,
-                  })}
-                  onMouseDown={this._onEdit.bind(null, i)}>
+              "autolist_show": true,
+              "autolist_show--new": i === values.length - 1,
+            })}
+              onMouseDown={this._onEdit.bind(null, i)}>
               {item}
             </div>
           }
           {i < values.length - 1 &&
             <i className="autolist_del fa fa-times"
-               onClick={this._onRemove.bind(null, i)}/>}
+              onClick={this._onRemove.bind(null, i)} />}
         </div>
       )}
     </div>
   }
-})
+}
 
 module.exports = AutoList

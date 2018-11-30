@@ -1,24 +1,23 @@
 
-var React = require('react/addons')
+var React = require('react')
 var bcrypt = require('bcrypt-nodejs')
-
-var AdminYaml = React.createClass({
-  getInitialState: function() {
-    return {
+class AdminYaml extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       passwordHash: '$2a$10$L.XAIqIWgTc5S1zpvV3MEu7/rH34p4Is/nq824smv8EZ3lIPCp1su'
     }
-  },
+  }
 
-  componentDidUpdate: function (prevProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.password !== this.props.password) {
       var salt = bcrypt.genSaltSync(10)
       var hash = bcrypt.hashSync(this.props.password, salt)
-      this.setState({passwordHash: hash})
+      this.setState({ passwordHash: hash })
     }
-  },
+  }
 
-  render: function() {
-
+  render() {
     var adminYaml = [
       '# hexo-admin authentification',
       'admin:',
@@ -32,30 +31,30 @@ var AdminYaml = React.createClass({
       </pre>
     )
   }
-})
-
-var AuthSetup = React.createClass({
-  getInitialState: function() {
-    return {
+}
+class AuthSetup extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
       username: 'username',
       password: 'password',
       secret: 'my super secret phrase'
     }
-  },
+  }
 
-  handleUsernameChange: function(e) {
-    this.setState({username: e.target.value})
-  },
+  handleUsernameChange(e) {
+    this.setState({ username: e.target.value })
+  }
 
-  handlePasswordChange: function(e) {
-    this.setState({password: e.target.value})
-  },
+  handlePasswordChange(e) {
+    this.setState({ password: e.target.value })
+  }
 
-  handleSecretChange: function(e) {
-    this.setState({secret: e.target.value})
-  },
+  handleSecretChange(e) {
+    this.setState({ secret: e.target.value })
+  }
 
-  render: function() {
+  render() {
     return (
       <div className='authSetup'>
         <h1>Authentification Setup</h1>
@@ -69,22 +68,22 @@ var AuthSetup = React.createClass({
           <label>Username:</label>
           <p>The username you'll use to log in.</p>
           <input type='text'
-                 onChange={this.handleUsernameChange}
-                 defaultValue={this.state.username}></input>
+            onChange={this.handleUsernameChange}
+            defaultValue={this.state.username}></input>
         </div>
         <div>
-        <label>Password:</label>
+          <label>Password:</label>
           <p>The password you'll use to log in. This will be encrypted to store in your config.</p>
           <input type='text'
-                 onChange={this.handlePasswordChange}
-                 defaultValue={this.state.password}></input>
+            onChange={this.handlePasswordChange}
+            defaultValue={this.state.password}></input>
         </div>
         <div>
-        <label>Secret:</label>
+          <label>Secret:</label>
           <p>This is used to encrypt cookies; make it long and obscure.</p>
           <input type='text'
-                 onChange={this.handleSecretChange}
-                 defaultValue={this.state.secret}></input>
+            onChange={this.handleSecretChange}
+            defaultValue={this.state.secret}></input>
         </div>
         <h2>Admin Config Section</h2>
         <p>
@@ -92,11 +91,12 @@ var AuthSetup = React.createClass({
           be protected with a password!
         </p>
         <AdminYaml username={this.state.username}
-                   password={this.state.password}
-                   secret={this.state.secret}/>
+          password={this.state.password}
+          secret={this.state.secret} />
       </div>
     );
   }
-})
+}
+
 
 module.exports = AuthSetup

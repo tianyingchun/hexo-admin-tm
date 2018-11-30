@@ -1,8 +1,7 @@
 
 var path = require('path')
-var React = require('react/addons')
-var cx = React.addons.classSet
-var Promise = require('es6-promise').Promise
+var React = require('react')
+var cx = require('classnames');
 var PT = React.PropTypes
 var CodeMirror = require('./code-mirror')
 var SinceWhen = require('./since-when')
@@ -11,56 +10,43 @@ var CheckGrammar = require('./check-grammar')
 var ConfigDropper = require('./config-dropper')
 var RenameFile = require('./rename-file')
 
-var Editor = React.createClass({
-  propTypes: {
-    post: PT.object,
-    raw: PT.string,
-    updatedRaw: PT.string,
-    onChangeTitle: PT.func,
-    title: PT.string,
-    updated: PT.object,
-    isDraft: PT.bool,
-    onPublish: PT.func.isRequired,
-    onUnpublish: PT.func.isRequired,
-    tagsCategoriesAndMetadata: PT.object,
-    adminSettings: PT.object
-  },
-
-  getInitialState: function() {
+class Editor extends React.Component {
+  constructor(props) {
+    super(props);
     var url = window.location.pathname.split('/')
     var rootPath = url.slice(0, url.indexOf('admin')).join('/')
-    return {
+    this.state = {
       previewLink: path.join(rootPath, this.props.post.path),
       checkingGrammar: false,
     }
-  },
+  }
 
-  handlePreviewLink: function(previewLink) {
+  handlePreviewLink(previewLink) {
     console.log('updating preview link')
     this.setState({
       previewLink: path.join(previewLink)
     })
-  },
+  }
 
-  handleChangeTitle: function (e) {
+  handleChangeTitle(e) {
     return this.props.onChangeTitle(e.target.value)
-  },
+  }
 
-  handleScroll: function (percent) {
+  handleScroll(percent) {
     if (!this.state.checkingGrammar) {
       var node = this.refs.rendered.getDOMNode()
       var height = node.getBoundingClientRect().height
       node.scrollTop = (node.scrollHeight - height) * percent
     }
-  },
+  }
 
-  onCheckGrammar: function () {
+  onCheckGrammar() {
     this.setState({
       checkingGrammar: !this.state.checkingGrammar
     })
-  },
+  }
 
-  render: function () {
+  render() {
     return <div className={cx({
       "editor": true,
       "editor--draft": this.props.isDraft
@@ -69,11 +55,11 @@ var Editor = React.createClass({
         <input
           className='editor_title'
           value={this.props.title}
-          onChange={this.handleChangeTitle}/>
+          onChange={this.handleChangeTitle} />
         {!this.props.isPage && <ConfigDropper
           post={this.props.post}
           tagsCategoriesAndMetadata={this.props.tagsCategoriesAndMetadata}
-          onChange={this.props.onChange}/>}
+          onChange={this.props.onChange} />}
         {!this.props.isPage && (this.props.isDraft ?
           <button className="editor_publish" onClick={this.props.onPublish}>
             Publish
@@ -81,28 +67,28 @@ var Editor = React.createClass({
           <button className="editor_unpublish" onClick={this.props.onUnpublish}>
             Unpublish
           </button>)}
-          {!this.props.isPage && (this.props.isDraft ?
+        {!this.props.isPage && (this.props.isDraft ?
           <button className="editor_remove" title="Remove"
-                  onClick={this.props.onRemove}>
-            <i className="fa fa-trash-o" aria-hidden="true"/>
+            onClick={this.props.onRemove}>
+            <i className="fa fa-trash-o" aria-hidden="true" />
           </button> :
           <button className="editor_remove" title="Can't Remove Published Post"
-                  onClick={this.props.onRemove} disabled>
-            <i className="fa fa-trash-o" aria-hidden="true"/>
+            onClick={this.props.onRemove} disabled>
+            <i className="fa fa-trash-o" aria-hidden="true" />
           </button>)}
-          {!this.props.isPage &&
+        {!this.props.isPage &&
           <button className="editor_checkGrammar" title="Check for Writing Improvements"
-                  onClick={this.onCheckGrammar}>
-            <i className="fa fa-check-circle-o"/>
+            onClick={this.onCheckGrammar}>
+            <i className="fa fa-check-circle-o" />
           </button>}
       </div>
       <div className="editor_main">
         <div className="editor_edit">
           <div className="editor_md-header">
             {this.props.updated &&
-                <SinceWhen className="editor_updated"
+              <SinceWhen className="editor_updated"
                 prefix="saved "
-                time={this.props.updated}/>}
+                time={this.props.updated} />}
             <span>Markdown&nbsp;&nbsp;
               <RenameFile post={this.props.post}
                 handlePreviewLink={this.handlePreviewLink} /></span>
@@ -121,13 +107,13 @@ var Editor = React.createClass({
             </span>
             Preview
             {' '}<a className="editor_perma-link" href={this.state.previewLink} target="_blank">
-              <i className="fa fa-link"/> {this.state.previewLink}
+              <i className="fa fa-link" /> {this.state.previewLink}
             </a>
           </div>
           {!this.state.checkingGrammar && <Rendered
             ref="rendered"
             className="editor_rendered"
-            text={this.props.rendered}/>}
+            text={this.props.rendered} />}
           {this.state.checkingGrammar && <CheckGrammar
             toggleGrammar={this.onCheckGrammar}
             raw={this.props.updatedRaw} />}
@@ -135,6 +121,19 @@ var Editor = React.createClass({
       </div>
     </div>;
   }
-})
+}
+Editor.propTypes = {
+  post: PT.object,
+  raw: PT.string,
+  updatedRaw: PT.string,
+  onChangeTitle: PT.func,
+  title: PT.string,
+  updated: PT.object,
+  isDraft: PT.bool,
+  onPublish: PT.func.isRequired,
+  onUnpublish: PT.func.isRequired,
+  tagsCategoriesAndMetadata: PT.object,
+  adminSettings: PT.object
+}
 
 module.exports = Editor

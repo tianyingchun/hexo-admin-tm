@@ -1,43 +1,38 @@
 
 var path = require('path')
-var React = require('react/addons')
-var PT = React.PropTypes
+var React = require('react')
+var PT = require('prop-types')
 var api = require('./api')
 
-var RenameFile = React.createClass({
-  propTypes: {
-    post: PT.object,
-    handlePreviewLink: PT.func
-  },
-
-  getInitialState: function() {
-    return {
+class RenameFile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       filename: '',
       editing: false,
       editingName: ''
     }
-  },
-
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     var filename = this.props.post.source
     this.setState({
       filename: filename,
       editingName: filename
     })
-  },
+  }
 
-  toggleEditing: function() {
+  toggleEditing() {
     this.setState({
       editing: !this.state.editing,
       editingName: this.state.filename
     })
-  },
+  }
 
-  handleEditChange: function(e) {
-    this.setState({editingName: e.target.value})
-  },
+  handleEditChange(e) {
+    this.setState({ editingName: e.target.value })
+  }
 
-  handleRenameFile: function(e) {
+  handleRenameFile(e) {
     var postId = this.props.post._id
     var editingName = this.state.editingName
     api.renamePost(postId, editingName).then(result => {
@@ -52,12 +47,12 @@ var RenameFile = React.createClass({
       var rootPath = url.slice(0, url.indexOf('admin')).join('/')
       var previewLink = path.join(rootPath, result.path)
 
-      this.setState({filename: editingName, editing: false},
-                    this.props.handlePreviewLink(previewLink))
+      this.setState({ filename: editingName, editing: false },
+        this.props.handlePreviewLink(previewLink))
     })
-  },
+  }
 
-  handleKeyPress: function(e) {
+  handleKeyPress(e) {
     if (e.key === 'Enter') {
       return this.handleRenameFile()
     }
@@ -65,9 +60,9 @@ var RenameFile = React.createClass({
     if (e.keyCode === 27) {
       return this.toggleEditing()
     }
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className='fileRename'>
         {!this.state.editing &&
@@ -92,6 +87,11 @@ var RenameFile = React.createClass({
       </div>
     )
   }
-})
+}
+
+RenameFile.propTypes = {
+  post: PT.object,
+  handlePreviewLink: PT.func
+}
 
 module.exports = RenameFile

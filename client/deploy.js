@@ -4,19 +4,18 @@ var api = require('./api')
 var divStyle = {
   whiteSpace: 'nowrap'
 };
-
-var Deploy = React.createClass({
-  getInitialState: function() {
-    return {
+class Deploy extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       stdout: '',
       stderr: '',
       error: null,
       message: '',
       status: 'initial',
-    };
-  },
-
-  handleSubmit: function(e) {
+    }
+  }
+  handleSubmit(e) {
     e.preventDefault();
     var message = this.state.message;
     this.setState({
@@ -34,9 +33,9 @@ var Deploy = React.createClass({
         stderr: result.stderr && result.stderr.trim(),
       });
     });
-  },
+  }
 
-  render: function () {
+  render() {
     var body;
     if (this.state.error) {
       body = <h4>Error: {this.state.error}</h4>
@@ -68,15 +67,15 @@ var Deploy = React.createClass({
             className="deploy_message"
             value={this.state.message}
             placeholder="Deploy/commit message"
-            onChange={e => this.setState({message: e.target.value})}
+            onChange={e => this.setState({ message: e.target.value })}
           />
           <input type="submit" value="Deploy" />
         </form>
         {body}
       </div>
-    )
-    ;
+    );
   }
-})
+}
+
 
 module.exports = Deploy

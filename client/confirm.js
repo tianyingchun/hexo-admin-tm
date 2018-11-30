@@ -1,29 +1,21 @@
-var React = require('react/addons');
+var React = require('react');
 var Modal = require('./modal');
 
-var Confirm = React.createClass({
-  displayName: 'Confirm',
-  getDefaultProps: function () {
-    return {
-      confirmLabel: 'OK',
-      abortLabel: 'Cancel',
-    };
-  },
-
-  abort: function () {
+class Confirm extends React.Component {
+  abort() {
     return this.promise.reject();
-  },
+  }
 
-  confirm: function () {
+  confirm() {
     return this.promise.resolve();
-  },
+  }
 
-  componentDidMount: function () {
+  componentDidMount() {
     this.promise = new $.Deferred();
     return this.refs.confirm.getDOMNode().focus();
-  },
+  }
 
-  render: function () {
+  render() {
     var modalBody;
     if (this.props.description) {
       modalBody = (
@@ -65,7 +57,10 @@ var Confirm = React.createClass({
         </div>
       </Modal>
     );
-  },
-});
-
+  }
+}
+Confirm.defaultProps = {
+  confirmLabel: 'OK',
+  abortLabel: 'Cancel',
+}
 module.exports = Confirm

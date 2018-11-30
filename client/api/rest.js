@@ -1,10 +1,9 @@
 
-var request = require('superagent')
-var Promise = require('es6-promise').Promise
+const request = require('superagent')
 
 function _post(baseUrl, url, data) {
   return new Promise((f, r) => {
-    var req = request.post(baseUrl + url)
+    const req = request.post(baseUrl + url)
     if (data) {
       req = req.send(data)
     }
@@ -29,8 +28,8 @@ function _get(baseUrl, url, params) {
 }
 
 module.exports = function (baseUrl) {
-  var post = _post.bind(null, baseUrl)
-  var get = _get.bind(null, baseUrl)
+  const post = _post.bind(null, baseUrl)
+  const get = _get.bind(null, baseUrl)
 
   return {
     posts: () => get('/posts/list'),

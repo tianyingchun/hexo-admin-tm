@@ -1,7 +1,7 @@
 
 var path = require('path')
-var React = require('react/addons')
-var cx = React.addons.classSet
+var React = require('react')
+var cx = require('classnames');
 var Link = require('react-router').Link;
 var Router = require('react-router');
 var _ = require('lodash')

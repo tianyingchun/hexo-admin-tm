@@ -1,14 +1,21 @@
 
 var DataFetcher = require('./data-fetcher');
 var api = require('./api');
-var React = require('react/addons')
-var cx = React.addons.classSet
+var React = require('react')
+var cx = require('classnames');
 var Promise = require('es6-promise').Promise
 var marked = require('marked')
 var Editor = require('./editor')
 var _ = require('lodash')
 var moment = require('moment')
-
+class Page extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      updated: moment()
+    }
+  }
+}
 var Page = React.createClass({
   mixins: [DataFetcher((params) => {
     return {
@@ -17,12 +24,6 @@ var Page = React.createClass({
       //tagsCategoriesAndMetadata: api.tagsCategoriesAndMetadata()
     }
   })],
-
-  getInitialState: function () {
-    return {
-      updated: moment()
-    }
-  },
 
   componentDidMount: function () {
     this._page = _.debounce((update) => {

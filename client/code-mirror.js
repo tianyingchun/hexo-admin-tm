@@ -4,14 +4,9 @@ var CM = require('codemirror/lib/codemirror')
 var PT = React.PropTypes
 var api = require('./api')
 
-var CodeMirror = React.createClass({
-  propTypes: {
-    onScroll: PT.func,
-    forceLineNumbers: PT.bool,
-    adminSettings: PT.object
-  },
+class CodeMirror extends React.Component {
 
-  componentDidUpdate: function (prevProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.initialValue !== this.props.initialValue) {
       this.cm.setValue(this.props.initialValue)
     }
@@ -21,9 +16,9 @@ var CodeMirror = React.createClass({
         this.cm.setOption('lineNumbers', this.props.forceLineNumbers);
       }
     }
-  },
+  }
 
-  componentDidMount: function () {
+  componentDidMount() {
     require('codemirror/mode/markdown/markdown')
 
     var editorSettings = {
@@ -51,25 +46,25 @@ var CodeMirror = React.createClass({
     window.addEventListener('resize', this._onResize)
 
     document.addEventListener('paste', this._onPaste)
-  },
+  }
 
-  _onResize: function () {
+  _onResize() {
     var box = this.getDOMNode().parentNode.getBoundingClientRect()
     // need to subtract header to get proper height without flexbox (see #124)
     this.cm.setSize(box.width, box.height - 32)
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     document.removeEventListener('paste', this._onPaste)
     document.removeEventListener('resize', this._onResize)
-  },
+  }
 
-  _onPaste: function (event) {
+  _onPaste(event) {
     var items = (event.clipboardData || event.originalEvent.clipboardData).items;
     if (!items.length) return
     var blob;
     for (var i = items.length - 1; i >= 0; i--) {
-      if (items[i].kind == 'file'){
+      if (items[i].kind == 'file') {
         blob = items[i].getAsFile();
         break;
       }
@@ -81,8 +76,8 @@ var CodeMirror = React.createClass({
     reader.onload = (event) => {
       var filename = null;
       if (settings.options) {
-        if(!!settings.options.askImageFilename) {
-          var filePath = !!settings.options.imagePath ? settings.options.imagePath : '/images'
+        if (!!settings.options.askImageFilename) {
+          var filePath = !!settings.options.imageRootPath ? settings.options.imageRootPath : '/uploads'
           filename = prompt(`What would you like to name the photo? All files saved as pngs. Name will be relative to ${filePath}.`, 'image.png')
         }
       }
@@ -92,11 +87,17 @@ var CodeMirror = React.createClass({
       );
     };
     reader.readAsDataURL(blob);
-  },
-
-  render: function () {
-    return <div/>
   }
-})
+
+  render() {
+    return <div />
+  }
+}
+CodeMirror.propTypes = {
+  onScroll: PT.func,
+  forceLineNumbers: PT.bool,
+  adminSettings: PT.object
+}
+
 
 module.exports = CodeMirror

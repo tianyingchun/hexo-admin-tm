@@ -1,11 +1,11 @@
-var React = require('react/addons');
-var Modal = React.createClass({
-  displayName: 'Modal',
-  backdrop: function () {
-    return <div className='modal-backdrop in' />;
-  },
+var React = require('react');
 
-  modal: function () {
+class Modal extends React.Component {
+  backdrop() {
+    return <div className='modal-backdrop in' />;
+  }
+
+  modal() {
     var style = { display: 'block' };
     return (
       <div
@@ -23,16 +23,16 @@ var Modal = React.createClass({
         </div>
       </div>
     );
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <div>
         {this.backdrop()}
         {this.modal()}
       </div>
     );
-  },
-});
+  }
+}
 
 module.exports = Modal

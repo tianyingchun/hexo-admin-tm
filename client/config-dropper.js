@@ -1,9 +1,9 @@
 
-var React = require('react/addons')
+var React = require('react')
 var AutoList = require('./auto-list')
 var moment = require('moment')
 var _ = require('lodash')
-var cx = React.addons.classSet;
+var cx = require('classnames');
 
 var dateFormat = 'MMM D YYYY HH:mm'
 
@@ -11,35 +11,32 @@ function toText(lst, map) {
   return lst.map((name) => map[name] || name)
 }
 
-function addMetadata(state, metadata, post){
-  for(var i=0; i<metadata.length; i++){
+function addMetadata(state, metadata, post) {
+  for (var i = 0; i < metadata.length; i++) {
     state[metadata[i]] = post[metadata[i]]
   }
 }
 
-function isMetadataEqual(state, metadata, post){
+function isMetadataEqual(state, metadata, post) {
   var isEqual = true;
-  for(var i=0; i<metadata.length && isEqual; i++){
+  for (var i = 0; i < metadata.length && isEqual; i++) {
     isEqual = isEqual && state[metadata[i]] === post[metadata[i]]
   }
   return isEqual
 }
-
-var ConfigDropper = React.createClass({
-  getInitialState: function () {
-    var tagCatMeta = this.props.tagsCategoriesAndMetadata
-    var state = {
+class ConfigDropper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       open: false,
       date: moment(this.props.post.date).format(dateFormat),
       tags: toText(this.props.post.tags, tagCatMeta.tags),
       categories: toText(this.props.post.categories, tagCatMeta.categories),
       author: this.props.post.author,
-    }
+    };
     addMetadata(state, tagCatMeta.metadata, this.props.post);
-    return state
-  },
-
-  componentWillReceiveProps: function (nextProps) {
+  }
+  componentWillReceiveProps(nextProps) {
     if (nextProps.post === this.props.post) {
       return
     }
@@ -52,18 +49,18 @@ var ConfigDropper = React.createClass({
     }
     addMetadata(state, tagCatMeta.metadata, nextProps.post);
     this.setState(state)
-  },
+  }
 
-  componentDidUpdate: function (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.state.open && !prevState.open) {
       document.addEventListener('mousedown', this._globalMouseDown)
     }
     if (!this.state.open && prevState.open) {
       document.removeEventListener('mousedown', this._globalMouseDown)
     }
-  },
+  }
 
-  _globalMouseDown: function (e) {
+  _globalMouseDown(e) {
     var mine = this.getDOMNode()
     var node = e.target
     while (node) {
@@ -73,47 +70,46 @@ var ConfigDropper = React.createClass({
       if (node === mine) return;
     }
     this._onClose()
-  },
+  }
 
-  _toggleShow: function () {
+  _toggleShow() {
     if (this.state.open) {
       this.save()
     }
     this.setState({
       open: !this.state.open
     })
-  },
+  }
 
-  _onClose: function () {
+  _onClose() {
     this.save()
-    this.setState({open: false})
-  },
-
-  _onChangeDate: function (e) {
+    this.setState({ open: false })
+  }
+  _onChangeDate(e) {
     this.setState({
       date: e.target.value
     })
-  },
+  }
 
-  _onChangeAuthor: function (e) {
+  _onChangeAuthor(e) {
     this.setState({
       author: e.target.value
     })
-  },
+  }
 
-  _onChangeMetadata: function (e) {
+  _onChangeMetadata(e) {
     var state = {}
     state[e.target.name] = e.target.value
     this.setState(state)
-  },
+  }
 
-  _onChange: function (attr, value) {
+  _onChange(attr, value) {
     var update = {}
     update[attr] = value
     this.setState(update);
-  },
+  }
 
-  save: function () {
+  save() {
     var date = moment(this.state.date)
     if (!date.isValid()) {
       date = moment(this.props.post.date)
@@ -125,9 +121,9 @@ var ConfigDropper = React.createClass({
     var textDate = date.toISOString()
     var isSameMetadata = isMetadataEqual(this.state, tagCatMeta.metadata, this.props.post)
     if (textDate === this.props.post.date &&
-        _.isEqual(this.state.categories, categories) &&
-        _.isEqual(this.state.tags, tags) && author === this.state.author &&
-        isSameMetadata) {
+      _.isEqual(this.state.categories, categories) &&
+      _.isEqual(this.state.tags, tags) && author === this.state.author &&
+      isSameMetadata) {
       return
     }
     var state = {
@@ -138,56 +134,56 @@ var ConfigDropper = React.createClass({
     }
     addMetadata(state, tagCatMeta.metadata, this.state)
     this.props.onChange(state)
-  },
+  }
 
-  config: function () {
+  config() {
     return <div className="config">
       <div className="config_section">
         <div className="config_section-title">Date</div>
         <input
           className="config_date"
           value={this.state.date}
-          onChange={this._onChangeDate}/>
+          onChange={this._onChangeDate} />
       </div>
       <div className="config_section">
         <div className="config_section-title">Author</div>
         <input
-            className="config_author"
-            value={this.state.author}
-            onChange={this._onChangeAuthor}/>
+          className="config_author"
+          value={this.state.author}
+          onChange={this._onChangeAuthor} />
       </div>
       <div className="config_section">
         <div className="config_section-title">Tags</div>
         <AutoList
           options={this.props.tagsCategoriesAndMetadata.tags}
           values={this.state.tags}
-          onChange={this._onChange.bind(null, 'tags')}/>
+          onChange={this._onChange.bind(null, 'tags')} />
       </div>
       <div className="config_section">
         <div className="config_section-title">Categories</div>
         <AutoList
           options={this.props.tagsCategoriesAndMetadata.categories}
           values={this.state.categories}
-          onChange={this._onChange.bind(null, 'categories')}/>
+          onChange={this._onChange.bind(null, 'categories')} />
       </div>
       {this.configMetadata()}
     </div>
-  },
+  }
 
-  configMetadata: function() {
+  configMetadata() {
     var metadata = this.props.tagsCategoriesAndMetadata.metadata;
     var self = this;
-    return metadata.map(function(name, index){
+    return metadata.map(function (name, index) {
       var component = (_.isArray(self.state[name]))
-      ? <AutoList
+        ? <AutoList
           options={[]}
           values={self.state[name]}
           onChange={self._onChange.bind(null, name)} />
-      : <input
+        : <input
           className="config_metadata"
           value={self.state[name]}
           name={name}
-          onChange={self._onChangeMetadata}/>
+          onChange={self._onChangeMetadata} />
 
       return (
         <div key={index} className="config_section">
@@ -196,21 +192,22 @@ var ConfigDropper = React.createClass({
         </div>
       )
     })
-  },
+  }
 
-  render: function () {
+  render() {
     return <div className={cx({
-        "config-dropper": true,
-        "config-dropper--open": this.state.open
-      })}
-           title="Settings">
+      "config-dropper": true,
+      "config-dropper--open": this.state.open
+    })}
+      title="Settings">
       <div className="config-dropper_handle"
-           onClick={this._toggleShow}>
-        <i className="fa fa-gear"/>
+        onClick={this._toggleShow}>
+        <i className="fa fa-gear" />
       </div>
       {this.state.open && this.config()}
     </div>
   }
-})
+}
+
 
 module.exports = ConfigDropper

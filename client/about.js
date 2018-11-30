@@ -1,7 +1,7 @@
-var React = require('react')
+const React = require('react')
 
-var About = React.createClass({
-  render: function () {
+class About extends React.Component {
+  render() {
     return <div className="about">
       <h1>This is the Hexo Admin Plugin</h1>
       <p><strong>Goal: Provide an awesome admin experience for managing your blog.</strong></p>
@@ -14,7 +14,7 @@ var About = React.createClass({
       </p>
     </div>
   }
-})
+}
 
 module.exports = About
 

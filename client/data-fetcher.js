@@ -1,21 +1,19 @@
-var p = require('es6-promise')
-  , Promise = p.Promise
+module.exports = function (fetch, Child) {
+  return class DataFetcher extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {};
+    }
 
-module.exports = function (fetch) {
-  return {
-    getInitialState: function () {
-      return { }
-    },
-
-    componentWillMount: function () {
+    componentWillMount() {
       this.loadData(this.props)
-    },
+    }
 
-    componentWillReceiveProps: function (nextProps) {
+    componentWillReceiveProps(nextProps) {
       this.loadData(nextProps)
-    },
+    }
 
-    loadData: function (props) {
+    loadData(props) {
       var items = fetch(props.params)
       Object.keys(items).forEach((name) => {
         Promise.resolve(items[name]).then((data) => {
@@ -29,6 +27,9 @@ module.exports = function (fetch) {
         })
       })
     }
-  }
+    render() {
+      <Child />
+    }
+  };
 }
 

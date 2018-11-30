@@ -1,5 +1,5 @@
 
-var React = require('react/addons')
+var React = require('react')
 var Link = require('react-router').Link
 var SettingsCheckbox = require('./settings-checkbox')
 var SettingsTextbox = require('./settings-textbox')
@@ -8,42 +8,44 @@ var divStyle = {
   whiteSpace: 'nowrap'
 };
 
-var Settings = React.createClass({
-  getInitialState: function() {
-    return {};
-  },
+class Settings extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
 
-  render: function () {
+    }
+  }
+  render() {
     var LineNumbers = SettingsCheckbox({
       name: 'lineNumbers',
-      enableOptions: {editor: {lineNumbers: true}},
-      disableOptions: {editor: {lineNumbers: false}},
+      enableOptions: { editor: { lineNumbers: true } },
+      disableOptions: { editor: { lineNumbers: false } },
       label: 'Enable line numbering.'
     });
 
     var SpellCheck = SettingsCheckbox({
       name: 'spellcheck',
-      enableOptions: {editor: {inputStyle: 'contenteditable', spellcheck: true}},
-      disableOptions: {editor: {inputStyle: null, spellcheck: false}},
+      enableOptions: { editor: { inputStyle: 'contenteditable', spellcheck: true } },
+      disableOptions: { editor: { inputStyle: null, spellcheck: false } },
       label: 'Enable spellchecking. (buggy on older browsers)'
     });
 
     var AskImageFilename = SettingsCheckbox({
       name: 'askImageFilename',
       label: 'Always ask for filename.',
-      style: {width: '300px', display: 'inline-block'}
+      style: { width: '300px', display: 'inline-block' }
     });
 
     var OverwriteImages = SettingsCheckbox({
       name: 'overwriteImages',
       label: 'Overwrite images if file already exists.',
-      style: {width: '425px', display: 'inline-block'}
+      style: { width: '425px', display: 'inline-block' }
     })
 
-    var ImagePath = SettingsTextbox({
-      name: 'imagePath',
-      defaultValue: '/images',
-      label: 'Image directory'
+    var ImageRootPath = SettingsTextbox({
+      name: 'imageRootPath',
+      defaultValue: '/uploads',
+      label: 'Image Root directory'
     });
 
     var ImagePrefix = SettingsTextbox({
@@ -51,7 +53,11 @@ var Settings = React.createClass({
       defaultValue: 'pasted-',
       label: 'Image filename prefix'
     });
-
+    var ImagePathFolderFormat = SettingsTextbox({
+      name: 'imagePathFolderFormat',
+      defaultValue: 'YYYY/MM',
+      label: 'Image PathFolder Format'
+    });
     return (
       <div className="settings" style={divStyle}>
         <h1>Settings</h1>
@@ -76,11 +82,12 @@ var Settings = React.createClass({
         </p>
         {AskImageFilename}
         {OverwriteImages}
-        {ImagePath}
+        {ImageRootPath}
+        {ImagePathFolderFormat}
         {ImagePrefix}
       </div>
     );
   }
-})
+}
 
 module.exports = Settings

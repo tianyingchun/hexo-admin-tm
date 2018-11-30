@@ -2,6 +2,7 @@ var path = require('path')
 var fs = require('hexo-fs')
 var yml = require('js-yaml')
 var deepAssign = require('deep-assign')
+var moment = require('moment');
 var extend = require('extend')
 var updateAny = require('./update')
   , updatePage = updateAny.bind(null, 'Page')
@@ -38,7 +39,7 @@ module.exports = function (app, hexo) {
     var path = hexo.base_dir + '_admin-config.yml'
     if (!fs.existsSync(path)) {
       hexo.log.d('admin config not found, creating one')
-      fs.writeFile(hexo.base_dir+'_admin-config.yml', '')
+      fs.writeFile(hexo.base_dir + '_admin-config.yml', '')
       return {}
     } else {
       var settings = yml.safeLoad(fs.readFileSync(path))
@@ -52,7 +53,7 @@ module.exports = function (app, hexo) {
     var post = hexo.model('Post').get(id)
     if (!post) return res.send(404, "Post not found")
     var newSource = '_discarded/' + post.source.slice('_drafts'.length)
-    update(id, {source: newSource}, function (err, post) {
+    update(id, { source: newSource }, function (err, post) {
       if (err) {
         return res.send(400, err);
       }
@@ -64,7 +65,7 @@ module.exports = function (app, hexo) {
     var post = hexo.model('Post').get(id)
     if (!post) return res.send(404, "Post not found")
     var newSource = '_posts/' + post.source.slice('_drafts/'.length)
-    update(id, {source: newSource}, function (err, post) {
+    update(id, { source: newSource }, function (err, post) {
       if (err) {
         return res.send(400, err);
       }
@@ -76,7 +77,7 @@ module.exports = function (app, hexo) {
     var post = hexo.model('Post').get(id)
     if (!post) return res.send(404, "Post not found")
     var newSource = '_drafts/' + post.source.slice('_posts/'.length)
-    update(id, {source: newSource}, function (err, post) {
+    update(id, { source: newSource }, function (err, post) {
       if (err) {
         return res.send(400, err);
       }
@@ -96,7 +97,7 @@ module.exports = function (app, hexo) {
     var oldPath = post.full_source
     oldPath = oldPath.slice(0, oldPath.indexOf('index.md'))
 
-    updateAny(model, id, {source: body.filename}, function (err, post) {
+    updateAny(model, id, { source: body.filename }, function (err, post) {
       if (err) {
         return res.send(400, err);
       }
@@ -122,11 +123,11 @@ module.exports = function (app, hexo) {
           return res.end('');
         }
         res.setHeader('Content-type', 'application/json')
-        res.end(JSON.stringify(val, function(k, v) {
+        res.end(JSON.stringify(val, function (k, v) {
           // tags and cats have posts reference resulting in circular json..
-          if ( k == 'tags' || k == 'categories' ) {
+          if (k == 'tags' || k == 'categories') {
             // convert object to simple array
-            return v.toArray ? v.toArray().map(function(obj) {
+            return v.toArray ? v.toArray().map(function (obj) {
               return obj.name
             }) : v
           }
@@ -193,8 +194,8 @@ module.exports = function (app, hexo) {
   });
 
   use('pages/list', function (req, res) {
-   var page = hexo.model('Page')
-   res.done(page.toArray().map(addIsDraft));
+    var page = hexo.model('Page')
+    res.done(page.toArray().map(addIsDraft));
   });
 
   use('pages/new', function (req, res, next) {
@@ -206,19 +207,19 @@ module.exports = function (app, hexo) {
       return res.send(400, 'No title given');
     }
 
-    hexo.post.create({title: req.body.title, layout: 'page', date: new Date()})
-    .error(function(err) {
-      console.error(err, err.stack)
-      return res.send(500, 'Failed to create page')
-    })
-    .then(function (file) {
-      var source = file.path.slice(hexo.source_dir.length)
+    hexo.post.create({ title: req.body.title, layout: 'page', date: new Date() })
+      .error(function (err) {
+        console.error(err, err.stack)
+        return res.send(500, 'Failed to create page')
+      })
+      .then(function (file) {
+        var source = file.path.slice(hexo.source_dir.length)
 
-      hexo.source.process([source]).then(function () {
-        var page = hexo.model('Page').findOne({source: source})
-        res.done(addIsDraft(page));
+        hexo.source.process([source]).then(function () {
+          var page = hexo.model('Page').findOne({ source: source })
+          res.done(addIsDraft(page));
+        });
       });
-    });
   });
 
 
@@ -229,13 +230,13 @@ module.exports = function (app, hexo) {
       url = url.slice(0, -1)
     }
     var parts = url.split('/')
-    var last = parts[parts.length-1]
+    var last = parts[parts.length - 1]
     // not currently used?
     if (last === 'remove') {
-      return remove(parts[parts.length-2], req.body, res)
+      return remove(parts[parts.length - 2], req.body, res)
     }
     if (last === 'rename') {
-      return remove(parts[parts.length-2], req.body, res)
+      return remove(parts[parts.length - 2], req.body, res)
     }
 
     var id = last
@@ -262,8 +263,8 @@ module.exports = function (app, hexo) {
   });
 
   use('posts/list', function (req, res) {
-   var post = hexo.model('Post')
-   res.done(post.toArray().map(addIsDraft));
+    var post = hexo.model('Post')
+    res.done(post.toArray().map(addIsDraft));
   });
 
   use('posts/new', function (req, res, next) {
@@ -275,20 +276,20 @@ module.exports = function (app, hexo) {
       return res.send(400, 'No title given');
     }
 
-    var postParameters = {title: req.body.title, layout: 'draft', date: new Date(), author: hexo.config.author};
+    var postParameters = { title: req.body.title, layout: 'draft', date: new Date(), author: hexo.config.author };
     extend(postParameters, hexo.config.metadata || {});
     hexo.post.create(postParameters)
-    .error(function(err) {
-      console.error(err, err.stack)
-      return res.send(500, 'Failed to create post')
-    })
-    .then(function (file) {
-      var source = file.path.slice(hexo.source_dir.length)
-      hexo.source.process([source]).then(function () {
-        var post = hexo.model('Post').findOne({source: source.replace(/\\/g, '\/')})
-        res.done(addIsDraft(post));
+      .error(function (err) {
+        console.error(err, err.stack)
+        return res.send(500, 'Failed to create post')
+      })
+      .then(function (file) {
+        var source = file.path.slice(hexo.source_dir.length)
+        hexo.source.process([source]).then(function () {
+          var post = hexo.model('Post').findOne({ source: source.replace(/\\/g, '\/') })
+          res.done(addIsDraft(post));
+        });
       });
-    });
   });
 
   use('posts/', function (req, res, next) {
@@ -297,18 +298,18 @@ module.exports = function (app, hexo) {
       url = url.slice(0, -1)
     }
     var parts = url.split('/')
-    var last = parts[parts.length-1]
+    var last = parts[parts.length - 1]
     if (last === 'publish') {
-      return publish(parts[parts.length-2], req.body, res)
+      return publish(parts[parts.length - 2], req.body, res)
     }
     if (last === 'unpublish') {
-      return unpublish(parts[parts.length-2], req.body, res)
+      return unpublish(parts[parts.length - 2], req.body, res)
     }
     if (last === 'remove') {
-      return remove(parts[parts.length-2], req.body, res)
+      return remove(parts[parts.length - 2], req.body, res)
     }
     if (last === 'rename') {
-      return rename(parts[parts.length-2], req.body, res)
+      return rename(parts[parts.length - 2], req.body, res)
     }
 
     var id = last
@@ -349,20 +350,22 @@ module.exports = function (app, hexo) {
     var imagePrefix = 'pasted-'
     var askImageFilename = false
     var overwriteImages = false
+    var imagePathFolderFormat = 'YYYY/MM';
     // check for image settings and set them if they exist
     if (settings.options) {
       askImageFilename = !!settings.options.askImageFilename
       overwriteImages = !!settings.options.overwriteImages
-      imagePath = settings.options.imagePath ? settings.options.imagePath : imagePath
+      imagePath = settings.options.imageRootPath ? settings.options.imageRootPath : imageRootPath
       imagePrefix = settings.options.imagePrefix ? settings.options.imagePrefix : imagePrefix
+      imagePathFolderFormat = settings.options.imagePathFolderFormat ? settings.options.imagePathFolderFormat : imagePathFolderFormat;
     }
-
+    imagePath = path.join(imagePath, moment().utcOffset('+08:00').format(imagePathFolderFormat));
     var msg = 'upload successful'
-    var filename = imagePrefix + i +'.png'
     var i = 0
-    while (fs.existsSync(path.join(hexo.source_dir, imagePath, filename))) {
+    while (fs.existsSync(path.join(hexo.source_dir, imagePath, imagePrefix + i + '.png'))) {
       i += 1
     }
+    var filename = path.join(imagePrefix + i + '.png')
     if (req.body.filename) {
       var givenFilename = req.body.filename
       // check for png ending, add it if not there
@@ -371,7 +374,7 @@ module.exports = function (app, hexo) {
         givenFilename += '.png'
       }
       hexo.log.d('trying custom filename', givenFilename)
-      if (fs.existsSync(path.join(hexo.source_dir, imagePath, givenFilename))){
+      if (fs.existsSync(path.join(hexo.source_dir, imagePath, givenFilename))) {
         if (overwriteImages) {
           hexo.log.d('file already exists, overwriting')
           msg = 'overwrote existing file'
@@ -395,32 +398,33 @@ module.exports = function (app, hexo) {
       if (err) {
         console.log(err)
       }
-      var imageSrc = path.join(hexo.config.root + filename).replace(/\\/g, '/')
       hexo.source.process().then(function () {
-        res.done({
-          src: imageSrc,
-          msg: msg
-        })
+        setTimeout(() => {
+          res.done({
+            src: path.join(hexo.config.root + filename),
+            msg: msg
+          })
+        }, 1000);
       });
     })
   });
 
-  use('deploy', function(req, res, next) {
+  use('deploy', function (req, res, next) {
     if (req.method !== 'POST') return next()
     if (!hexo.config.admin || !hexo.config.admin.deployCommand) {
-      return res.done({error: 'Config value "admin.deployCommand" not found'});
+      return res.done({ error: 'Config value "admin.deployCommand" not found' });
     }
     try {
-      deploy(hexo.config.admin.deployCommand, req.body.message, function(err, result) {
+      deploy(hexo.config.admin.deployCommand, req.body.message, function (err, result) {
         console.log('res', err, result);
         if (err) {
-          return res.done({error: err.message || err})
+          return res.done({ error: err.message || err })
         }
         res.done(result);
       });
     } catch (e) {
       console.log('EEE', e);
-      res.done({error: e.message})
+      res.done({ error: e.message })
     }
   });
 }

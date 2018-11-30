@@ -1,8 +1,8 @@
 
 var DataFetcher = require('./data-fetcher');
 var api = require('./api');
-var React = require('react/addons')
-var cx = React.addons.classSet
+var React = require('react')
+var cx = require('classnames');
 var Promise = require('es6-promise').Promise
 var marked = require('marked')
 var Editor = require('./editor')

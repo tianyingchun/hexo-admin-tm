@@ -2,71 +2,67 @@
 var React = require('react')
 var PT = React.PropTypes
 var api = require('./api')
-
-var NewPost = React.createClass({
-  propTypes: {
-    onNew: PT.func
-  },
-
-  getInitialState: function () {
-    return {
+class NewPost extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       showing: false,
       loading: true,
       text: 'Untitled'
     }
-  },
+  }
 
-  componentDidUpdate: function (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.state.showing && !prevState.showing) {
       var node = this.refs.input.getDOMNode()
       node.focus()
       node.selectionStart = 0
       node.selectionEnd = node.value.length
     }
-  },
+  }
 
-  _onKeydown: function (e) {
+  _onKeydown(e) {
     if (e.key === 'Enter') {
       this._onSubmit(e)
     }
-  },
+  }
 
-  _onShow: function () {
-    this.setState({showing: true})
-  },
+  _onShow() {
+    this.setState({ showing: true })
+  }
 
-  _onBlur: function () {
+  _onBlur() {
     if (this.state.showing) {
       this._onCancel();
     }
-  },
+  }
 
-  _onSubmit: function (e) {
+  _onSubmit(e) {
     e.preventDefault();
-    this.setState({loading: true, showing: false})
+    this.setState({ loading: true, showing: false })
     api.newPost(this.state.text).then((post) => {
-      this.setState({showing: false, text: 'Untitled'})
+      this.setState({ showing: false, text: 'Untitled' })
       this.props.onNew(post)
     }, (err) => {
       console.error('Failed! to make post', err)
     })
-  },
+  }
 
-  _onCancel: function () {
-    this.setState({showing: false})
-  },
+  _onCancel() {
+    this.setState({ showing: false })
+  }
 
-  _onChange: function (e) {
+  _onChange(e) {
     this.setState({
       text: e.target.value
     })
-  },
+  }
 
-  render: function () {
+  render() {
     if (!this.state.showing) {
       return <div className="new-post" onClick={this._onShow}>
         <div className="new-post_button">
-          <i className="fa fa-plus"/>{' '}
+          <i className="fa fa-plus" />{' '}
           New Post
         </div>
       </div>
@@ -79,13 +75,16 @@ var NewPost = React.createClass({
         onBlur={this._onBlur}
         onKeyPress={this._onKeydown}
         onChange={this._onChange}
-        />
+      />
       <i className="fa fa-check-circle new-post_ok"
         onMouseDown={this._onSubmit} ></i>
       <i className="fa fa-times-circle new-post_cancel"
         onMouseDown={this._onCancel} ></i>
     </div>
   }
-})
+}
+NewPost.propTypes = {
+  onNew: PT.func
+}
 
 module.exports = NewPost
