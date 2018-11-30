@@ -38,7 +38,7 @@ const babelLoaderOpts = {
 module.exports = (env, options) => {
   process.env.NODE_ENV = options.mode;
   const isDevMode = options.mode === "development";
-  return {
+  const webpackConfig = {
     devtool: isDevMode ? "source-map" : false,
     stats: 'minimal',
     resolve: {
@@ -92,22 +92,32 @@ module.exports = (env, options) => {
       new webpack.ProvidePlugin({
         "React": "react",
       }),
-      new MiniCssExtractPlugin({
-        filename: `[name]/bundle.css`
+      new ForkTsCheckerWebpackPlugin(),
+      new HtmlWebpackPlugin({
+        template: path.join(settings.templatePath, 'index.html')
       }),
+    ]
+  };
+  // For production mode.
+  if (!isDevMode) {
+    webpackConfig.plugins.push(
+      new CleanWebpackPlugin([settings.distPath], {
+        verbose: true
+      })
+    );
+    webpackConfig.plugins.push(
       new CopyWebpackPlugin([
         { from: 'templates/vendor', to: `${settings.distPath}/vendor/`, toType: 'dir' },
         { from: 'templates/login', to: `${settings.distPath}/login/`, toType: 'dir' },
         { from: 'templates/css', to: `${settings.distPath}/css/`, toType: 'dir' },
         { from: 'templates/logo.png', to: `${settings.distPath}/logo.png`, toType: 'file' },
       ]),
-      new ForkTsCheckerWebpackPlugin(),
-      new CleanWebpackPlugin([settings.distPath], {
-        verbose: true
+    );
+    webpackConfig.plugins.push(
+      new MiniCssExtractPlugin({
+        filename: `[name]/bundle.css`
       }),
-      new HtmlWebpackPlugin({
-        template: path.join(settings.templatePath, 'index.html')
-      }),
-    ]
-  };
+    );
+  }
+  return webpackConfig;
 };
