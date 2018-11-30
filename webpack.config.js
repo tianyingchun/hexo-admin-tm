@@ -15,7 +15,11 @@ const babelLoaderOpts = {
   presets: [
     [
       '@babel/preset-env',
-      { targets: { browsers: 'last 2 versions' } }, // or whatever your project requires
+      {
+        // or whatever your project requires
+        useBuiltIns: "entry",
+        targets: { browsers: 'last 2 versions' }
+      },
     ],
     '@babel/preset-typescript',
     '@babel/preset-react',
