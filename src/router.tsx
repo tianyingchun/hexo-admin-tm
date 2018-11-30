@@ -8,14 +8,14 @@ import { Settings, AuthSetup } from './setting';
 export default () => {
   return (
     <Switch>
-      <Route name="post" render={() => <Post />} path="/posts/:postId" />
-      <Route name="page" render={() => <Page />} path="/pages/:pageId" />
-      <Route name="pages" render={() => <Pages />} path="/pages" />
-      <Route name="about" render={() => <About />} path="/about" />
-      <Route name="deploy" render={() => <Deploy />} path="/deploy" />
-      <Route name="settings" render={() => <Settings />} path="/settings" />
-      <Route name="auth-setup" render={() => <AuthSetup />} path="/auth-setup" />
-      <Route name="posts" render={() => <Posts />} path="/" />
+      <Route name="post" render={(props) => <Post {...props} />} path="/posts/:postId" />
+      <Route name="page" render={(props) => <Page {...props} />} path="/pages/:pageId" />
+      <Route name="pages" render={(props) => <Pages {...props} />} path="/pages" />
+      <Route name="about" render={(props) => <About {...props} />} path="/about" />
+      <Route name="deploy" render={(props) => <Deploy {...props} />} path="/deploy" />
+      <Route name="settings" render={(props) => <Settings {...props} />} path="/settings" />
+      <Route name="auth-setup" render={(props) => <AuthSetup {...props} />} path="/auth-setup" />
+      <Route name="posts" render={(props) => <Posts {...props} />} path="/" />
     </Switch>
   );
 };

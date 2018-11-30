@@ -1,7 +1,8 @@
-const React = require('react')
+import React from 'react';
 
 interface IRenderedProps {
   text: string;
+  className?: string;
 }
 
 export class Rendered extends React.Component<IRenderedProps, any> {
@@ -14,4 +15,3 @@ export class Rendered extends React.Component<IRenderedProps, any> {
     );
   }
 }
-
