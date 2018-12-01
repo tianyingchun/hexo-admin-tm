@@ -6,3 +6,4 @@ public
 db.json
 *.swp
 package-lock.json
+.DS_Store

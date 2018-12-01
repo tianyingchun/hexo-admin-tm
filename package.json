@@ -1,7 +1,7 @@
 {
   "name": "hexo-admin-tm",
   "version": "1.0.0",
-  "description": "Adds an admin section to the hexo server",
+  "description": "Adds an admin section to the hexo server using react 16",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --open --hot",
@@ -15,14 +15,11 @@
     "hexo",
     "admin",
     "dashboard",
-    "plugin"
+    "plugin",
+    "react 16"
   ],
-  "author": "Jared Forsyth <jared@jaredforsyth.com>",
+  "author": "tianyingchun <tianyingchun@outlook.com>",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jaredly/hexo-admin/issues"
-  },
-  "homepage": "http://jaredly.github.io/hexo-admin/",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.5.0",

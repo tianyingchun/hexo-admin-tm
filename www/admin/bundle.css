@@ -325,6 +325,175 @@
 .fileRename .fileRename_buttons i:hover {
   cursor: pointer;
 }
+.posts {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.posts_list {
+  background-color: #F7FAFF;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  min-width: 400px;
+  max-width: 400px;
+  overflow-y: auto;
+}
+.posts_post {
+  padding: 15px 20px;
+  color: #333;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+.posts_post:hover {
+  background-color: #ECF3FF;
+}
+.posts_post--selected {
+  background-color: #DFEBFF;
+}
+.posts_post--selected:hover {
+  background-color: #DFEBFF;
+}
+.posts_post--draft {
+  color: #aaa;
+  font-style: italic;
+}
+.posts_post-date {
+  position: absolute;
+  line-height: 1;
+  color: #999;
+  bottom: 5px;
+  right: 5px;
+  font-size: 10px;
+}
+.posts_display {
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+.posts_content {
+  overflow: auto;
+  padding: 30px;
+}
+.posts_draft-message {
+  background-color: #DFEBFF;
+  padding: 5px;
+  text-align: center;
+  color: white;
+  font-style: italic;
+  font-weight: bold;
+  opacity: 0.9;
+}
+.icon-link {
+  opacity: 0;
+  position: absolute;
+  padding: 5px 6px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  transition: opacity 0.3s ease, background-color 0.1s ease;
+}
+.icon-link:hover {
+  background-color: white;
+}
+.posts_post:hover .icon-link {
+  opacity: 1;
+}
+.posts_edit-link {
+  top: 5px;
+  right: 5px;
+  opacity: 0;
+  position: absolute;
+  padding: 5px 6px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  transition: opacity 0.3s ease, background-color 0.1s ease;
+}
+.posts_edit-link:hover {
+  background-color: white;
+}
+.posts_post:hover .posts_edit-link {
+  opacity: 1;
+}
+.posts_perma-link {
+  top: 5px;
+  right: 30px;
+  opacity: 0;
+  position: absolute;
+  padding: 5px 6px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  transition: opacity 0.3s ease, background-color 0.1s ease;
+}
+.posts_perma-link:hover {
+  background-color: white;
+}
+.posts_post:hover .posts_perma-link {
+  opacity: 1;
+}
+.new-post {
+  cursor: pointer;
+  position: relative;
+}
+.new-post_button {
+  padding: 10px 20px;
+  color: #6EAEFF;
+  transition: background-color 0.3s ease;
+}
+.new-post_button i {
+  margin-right: 5px;
+}
+.new-post_button:hover {
+  background-color: #DFEBFF;
+}
+.new-post_input {
+  box-sizing: border-box;
+  padding: 10px 20px;
+  font-size: 20px;
+  width: 100%;
+  height: 52px;
+  outline: none;
+  border: none;
+}
+.m-icon-button {
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+.m-icon-button:hover {
+  opacity: 1;
+}
+.new-post_ok {
+  right: 35px;
+  color: #0066ff;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+.new-post_ok:hover {
+  opacity: 1;
+}
+.new-post_cancel {
+  right: 10px;
+  color: #ff7373;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+.new-post_cancel:hover {
+  opacity: 1;
+}
 .config-dropper {
   position: absolute;
   top: 18px;
@@ -994,12 +1163,15 @@ body > div:first-of-type {
   border-bottom-color: #6EAEFF;
   color: #6EAEFF;
 }
+.app_nav li.active a {
+  border-bottom-color: #6EAEFF;
+  color: #6EAEFF;
+}
 .app_main {
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
 }
-
 
 .about {
   padding: 50px;
@@ -1018,6 +1190,7 @@ body > div:first-of-type {
 }
 .deploy_message {
   margin-right: 20px;
+  width: 500px;
 }
 .deploy p {
   margin-bottom: 1em;

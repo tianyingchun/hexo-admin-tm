@@ -1,6 +1,11 @@
 import { WebApi } from './WebApi';
 import { IPage } from 'src/models/IPage';
+import { ITagCategoriesMetadata } from '../models/ITagCategoryMetadata';
 
+interface IPageSave {
+  page: IPage;
+  tagsCategoriesAndMetadata: ITagCategoriesMetadata;
+}
 export class PageService extends WebApi {
 
   public newPage(title) {
@@ -11,11 +16,20 @@ export class PageService extends WebApi {
     return this.requestGet<IPage[]>('/pages/list');
   }
 
-  public page(id, data) {
-    if (data) {
-      return this.requestPost<IPage>('/pages/' + id, data);
-    }
+  public pageSave(id, data) {
+    return this.requestPost<IPageSave>('/pages/' + id, data);
+  }
+
+  public pageGet(id) {
     return this.requestGet<IPage>('/pages/' + id);
+  }
+
+  public publish(id) {
+    return this.requestPost<IPage>('/posts/' + id + '/publish');
+  }
+
+  public unpublish(id) {
+    return this.requestPost<IPage>('/posts/' + id + '/unpublish');
   }
 }
 

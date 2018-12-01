@@ -28,7 +28,7 @@ export class Posts extends Component<IRouteProps, any> {
     });
   }
 
-  public goTo = (id, e) => {
+  public goTo = (id) => (e) => {
     if (e) { e.preventDefault(); }
     this.props.history.push(`/posts/${id}`, {
       postId: id,
@@ -72,7 +72,7 @@ export class Posts extends Component<IRouteProps, any> {
                 'posts_post--draft': post.isDraft,
                 'posts_post--selected': i === this.state.selected,
               })}
-                onDoubleClick={this.goTo.bind(null, post._id)}
+                onDoubleClick={this.goTo(post._id)}
                 onClick={this.setState.bind(this, { selected: i }, null)}
               >
                 <span className="posts_post-title">

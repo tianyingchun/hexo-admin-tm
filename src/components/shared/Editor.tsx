@@ -12,7 +12,7 @@ interface IEditorProps {
   post: any;
   raw: string;
   isPage?: boolean;
-  updatedRaw: string;
+  updatedRaw?: string;
   onChange?: (value) => void;
   onChangeTitle: (value) => void;
   title: string;
@@ -24,7 +24,7 @@ interface IEditorProps {
   onChangeContent: (value) => void;
   wordCount?: number;
   rendered: string;
-  tagsCategoriesAndMetadata: object;
+  tagsCategoriesAndMetadata?: object;
   adminSettings: object;
 }
 
@@ -41,7 +41,7 @@ export class Editor extends React.Component<IEditorProps, any> {
     this.rendered = React.createRef();
   }
 
-  private handlePreviewLink(previewLink) {
+  private handlePreviewLink = (previewLink) => {
     console.log('updating preview link');
     this.setState({
       previewLink: path.join(previewLink),

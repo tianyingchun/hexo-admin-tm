@@ -20,7 +20,7 @@ export class SinceWhen extends React.Component<any, any> {
     clearInterval(this.iv);
   }
 
-  public tick() {
+  public tick = () => {
     this.setState({ time: this.props.time.fromNow() });
   }
 

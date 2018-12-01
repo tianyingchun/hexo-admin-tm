@@ -15,15 +15,17 @@ export class Confirm extends React.Component<IConfirmProps, any> {
     super(props);
     this.confirm = React.createRef();
   }
+
   public static defaultProps = {
     confirmLabel: 'OK',
     abortLabel: 'Cancel',
   };
-  public abort() {
+
+  public abort = () => {
     return this.promise.reject();
   }
 
-  public confirmHandle() {
+  public confirmHandle = () => {
     return this.promise.resolve();
   }
 

@@ -25,18 +25,18 @@ export class RenameFile extends React.Component<IRenameProps, any> {
     });
   }
 
-  public toggleEditing() {
+  public toggleEditing = () => {
     this.setState({
       editing: !this.state.editing,
       editingName: this.state.filename,
     });
   }
 
-  public handleEditChange(e) {
+  public handleEditChange = (e) => {
     this.setState({ editingName: e.target.value });
   }
 
-  public handleRenameFile(e?) {
+  public handleRenameFile = (e?) => {
     const postId = this.props.post._id;
     const editingName = this.state.editingName;
     postService.renamePost(postId, editingName).then(result => {

@@ -12,6 +12,7 @@ export class AutoList extends React.Component<any, any> {
     };
     this.input = React.createRef();
   }
+
   public componentDidUpdate(prevProps, prevState) {
     if (prevState.selected === null &&
       this.state.selected !== null) {
@@ -19,12 +20,12 @@ export class AutoList extends React.Component<any, any> {
     }
   }
 
-  public onChange(e) {
+  public onChange = (e) => {
     this.setState({ text: e.target.value });
   }
 
-  public onEdit(i, e) {
-    if (e.button !== 0) return;
+  public onEdit = (i, e) => {
+    if (e.button !== 0) { return; }
     e.preventDefault();
     e.stopPropagation();
     this.setState({
@@ -33,7 +34,7 @@ export class AutoList extends React.Component<any, any> {
     });
   }
 
-  public onBlur() {
+  public onBlur = () => {
     const values = this.props.values.slice();
     if (this.props.values.indexOf(this.state.text) === -1) {
       if (this.state.selected >= values.length) {

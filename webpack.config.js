@@ -62,8 +62,11 @@ module.exports = (env, options) => {
         errors: true
       },
       // stats: 'errors-only',
-      before(app, server) {
-        app.use('/admin/api', require('./mock')(app));
+      // before(app, server) {
+        // app.use('/admin/api', require('./mock')(app));
+      // }
+      proxy: {
+        '/admin/api': 'http://localhost:4000'
       }
     },
     module: {

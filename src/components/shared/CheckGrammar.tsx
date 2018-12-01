@@ -23,7 +23,7 @@ const suggestionContents = (suggestions) => {
 
 interface ICheckGrammarProps {
   toggleGrammar: () => void;
-  raw: string;
+  raw?: string;
 }
 
 // takes the place of Rendered in the editor, showing grammar suggestions

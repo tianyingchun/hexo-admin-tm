@@ -96,7 +96,7 @@ export class Post extends Component<IRouteProps, any> {
     });
   }
 
-  private handleChangeContent(text) {
+  private handleChangeContent = (text) => {
     if (text === this.state.raw) {
       return;
     }
@@ -108,7 +108,7 @@ export class Post extends Component<IRouteProps, any> {
     this.post({ _content: text });
   }
 
-  private handleChangeTitle(title) {
+  private handleChangeTitle = (title) => {
     if (title === this.state.title) {
       return;
     }
@@ -116,29 +116,29 @@ export class Post extends Component<IRouteProps, any> {
     this.post({ title });
   }
 
-  private handlePublish() {
+  private handlePublish = () => {
     if (!this.state.post.isDraft) return;
     postService.publish(this.state.post._id).then((post) => {
       this.setState({ post });
     });
   }
 
-  private handleUnpublish() {
+  private handleUnpublish = () => {
     if (this.state.post.isDraft) return;
     postService.unpublish(this.state.post._id).then((post) => {
       this.setState({ post });
     });
   }
 
-  private handleRemove() {
+  private handleRemove = () => {
     return confirm('Delete this post?', {
       description: 'This operation will move current draft into source/_discarded folder.',
       confirmLabel: 'Yes',
       abortLabel: 'No',
     }).then(() => {
-      postService.remove(this.state.post._id).then(
-        // Router.transitionTo('posts');
-      );
+      postService.remove(this.state.post._id).then(() => {
+        this.props.history.push('/posts');
+      });
     });
   }
 
