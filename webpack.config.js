@@ -57,9 +57,14 @@ module.exports = (env, options) => {
       contentBase: settings.templatePath,
       compress: true,
       port: 20000,
-      // proxy: {
-      //   '/api': 'http://127.0.0.1:50545'
-      // }
+      overlay: {
+        warnings: true,
+        errors: true
+      },
+      // stats: 'errors-only',
+      before(app, server) {
+        app.use('/admin/api', require('./mock')(app));
+      }
     },
     module: {
       rules: [
@@ -94,6 +99,7 @@ module.exports = (env, options) => {
       }),
       new ForkTsCheckerWebpackPlugin(),
       new HtmlWebpackPlugin({
+        minify: !isDevMode,
         template: path.join(settings.templatePath, 'index.html')
       }),
     ]
