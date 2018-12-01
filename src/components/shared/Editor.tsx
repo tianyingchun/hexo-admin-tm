@@ -54,7 +54,7 @@ export class Editor extends React.Component<IEditorProps, any> {
 
   private handleScroll = (percent) => {
     if (!this.state.checkingGrammar) {
-      const node = this.rendered.getDOMNode();
+      const node = this.rendered.current.getDOMNode();
       const height = node.getBoundingClientRect().height;
       node.scrollTop = (node.scrollHeight - height) * percent;
     }

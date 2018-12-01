@@ -346,7 +346,7 @@ module.exports = function (app, hexo) {
     }
     var settings = getSettings()
 
-    var imagePath = '/images'
+    var imageRootPath = '/uploads'
     var imagePrefix = 'pasted-'
     var askImageFilename = false
     var overwriteImages = false
@@ -355,14 +355,14 @@ module.exports = function (app, hexo) {
     if (settings.options) {
       askImageFilename = !!settings.options.askImageFilename
       overwriteImages = !!settings.options.overwriteImages
-      imagePath = settings.options.imageRootPath ? settings.options.imageRootPath : imageRootPath
+      imageRootPath = settings.options.imageRootPath ? settings.options.imageRootPath : imageRootPath
       imagePrefix = settings.options.imagePrefix ? settings.options.imagePrefix : imagePrefix
       imagePathFolderFormat = settings.options.imagePathFolderFormat ? settings.options.imagePathFolderFormat : imagePathFolderFormat;
     }
-    imagePath = path.join(imagePath, moment().utcOffset('+08:00').format(imagePathFolderFormat));
+    imageRootPath = path.join(imageRootPath, moment().utcOffset('+08:00').format(imagePathFolderFormat));
     var msg = 'upload successful'
     var i = 0
-    while (fs.existsSync(path.join(hexo.source_dir, imagePath, imagePrefix + i + '.png'))) {
+    while (fs.existsSync(path.join(hexo.source_dir, imageRootPath, imagePrefix + i + '.png'))) {
       i += 1
     }
     var filename = path.join(imagePrefix + i + '.png')
@@ -374,7 +374,7 @@ module.exports = function (app, hexo) {
         givenFilename += '.png'
       }
       hexo.log.d('trying custom filename', givenFilename)
-      if (fs.existsSync(path.join(hexo.source_dir, imagePath, givenFilename))) {
+      if (fs.existsSync(path.join(hexo.source_dir, imageRootPath, givenFilename))) {
         if (overwriteImages) {
           hexo.log.d('file already exists, overwriting')
           msg = 'overwrote existing file'
@@ -388,11 +388,11 @@ module.exports = function (app, hexo) {
       }
     }
 
-    filename = path.join(imagePath, filename)
+    filename = path.join(imageRootPath, filename)
     var outpath = path.join(hexo.source_dir, filename)
 
     var dataURI = req.body.data.slice('data:image/png;base64,'.length)
-    var buf = new Buffer(dataURI, 'base64')
+    var buf = Buffer.from(dataURI, 'base64')
     hexo.log.d(`saving image to ${outpath}`)
     fs.writeFile(outpath, buf, function (err) {
       if (err) {
