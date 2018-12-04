@@ -5,35 +5,13 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default;
 
 const settings = {
   distPath: path.join(__dirname, "www"),
   srcPath: path.join(__dirname, "src"),
   templatePath: path.join(__dirname, "templates"),
 };
-
-const babelLoaderOpts = {
-  cacheDirectory: true,
-  babelrc: false,
-  presets: [
-    [
-      '@babel/preset-env',
-      {
-        // or whatever your project requires
-        useBuiltIns: "entry",
-        targets: { browsers: 'last 2 versions' }
-      },
-    ],
-    '@babel/preset-typescript',
-    '@babel/preset-react',
-  ],
-  plugins: [
-    // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
-    ['@babel/plugin-proposal-decorators', { legacy: true }],
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
-    'react-hot-loader/babel',
-  ],
-}
 
 module.exports = (env, options) => {
   process.env.NODE_ENV = options.mode;
@@ -50,7 +28,7 @@ module.exports = (env, options) => {
       path: settings.distPath,
     },
     entry: {
-      [`admin`]: ["@babel/polyfill", "./src/index.tsx"],
+      [`admin`]: ['./src/index.tsx'],
     },
     devServer: {
       hot: true,
@@ -80,7 +58,7 @@ module.exports = (env, options) => {
             { loader: "less-loader", options: { sourceMap: isDevMode } }
           ]
         },
-        { test: /\.tsx?$/, use: [{ loader: "babel-loader", options: babelLoaderOpts }] },
+        { test: /\.tsx?$/, use: [{ loader: "babel-loader" }] },
         {
           test: /\.(ttf|eot|woff|woff2)$/,
           use: { loader: "file-loader", options: { name: "fonts/[name].[ext]" } },
@@ -101,6 +79,7 @@ module.exports = (env, options) => {
         "React": "react",
       }),
       new ForkTsCheckerWebpackPlugin(),
+      new WebpackDeepScopeAnalysisPlugin(),
       new HtmlWebpackPlugin({
         minify: !isDevMode,
         template: path.join(settings.templatePath, 'index.html')

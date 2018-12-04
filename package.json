@@ -1,11 +1,12 @@
 {
   "name": "hexo-admin-tm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Adds an admin section to the hexo server using react 16",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --open --hot",
-    "build": "./node_modules/.bin/webpack --mode production"
+    "build": "./node_modules/.bin/webpack --mode production",
+    "static": "serve -p 20001"
   },
   "repository": {
     "type": "git",
@@ -36,13 +37,15 @@
     "write-good": "^0.13.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/plugin-proposal-class-properties": "^7.0.0",
-    "@babel/plugin-proposal-decorators": "^7.0.0",
-    "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/core": "^7.2.0",
+    "@babel/plugin-proposal-class-properties": "^7.2.0",
+    "@babel/plugin-proposal-decorators": "^7.2.0",
+    "@babel/plugin-transform-async-to-generator": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.0.0",
+    "@babel/preset-typescript": "^7.1.0",
+    "@babel/runtime": "^7.2.0",
     "@types/classnames": "^2.2.6",
     "@types/jquery": "^3.3.22",
     "@types/node": "^10.12.10",
@@ -72,12 +75,14 @@
     "react-dom": "^16.6.3",
     "react-hot-loader": "^4.3.12",
     "react-router-dom": "^4.3.1",
+    "serve": "^10.1.1",
     "style-loader": "^0.23.1",
     "superagent": "^4.0.0",
     "tslint": "^5.11.0",
     "typescript": "^3.2.1",
     "webpack": "^4.14.0",
     "webpack-cli": "^3.0.8",
+    "webpack-deep-scope-plugin": "^1.6.0",
     "webpack-dev-server": "^3.1.4"
   }
 }
